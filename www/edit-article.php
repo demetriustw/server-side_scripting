@@ -1,13 +1,29 @@
-<?php
+<?php 
 
 require 'includes/database.php';
 require 'includes/article.php';
 require 'includes/url.php';
 
-$title = '';
-$content = '';
-$published_at = '';
+$conn = getDB();
 
+if (isset($_GET['id'])) {
+
+    $article = getArticle($conn, $_GET['id']);
+
+    if ($article) {
+
+    $id = $article['id'];
+    $title = $article['title'];
+    $content = $article['content'];
+    $published_at = $article['published_at'];
+
+    } else {
+        die("article not found");
+    }
+
+} else {
+    die("id not supplied, article not found");
+}
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     $title = $_POST['title'];
@@ -16,11 +32,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
    $errors = validateArticle($title, $content, $published_at);
 
-    if (empty($errors)) {        
-
-        $conn = getDB();
-
-        $sql = "INSERT INTO article (title, content, published_at) VALUES (?, ?, ?)";
+    if (empty($errors)) {
+    
+        $sql = "UPDATE article
+                SET title = ?,
+                    content = ?,
+                    published_at = ?
+                WHERE id = ?";
 
         $stmt = mysqli_prepare($conn, $sql);
 
@@ -34,11 +52,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 $published_at = null;
             }
 
-            mysqli_stmt_bind_param($stmt, "sss", $title, $content, $published_at);
+            mysqli_stmt_bind_param($stmt, "sssi", $title, $content, $published_at, $id);
 
             if (mysqli_stmt_execute($stmt)) {
-
-                $id = mysqli_insert_id($conn);
 
                 redirect("/article.php?id=$id");
             
@@ -48,13 +64,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
             }
         }
+
     }
 }
-
 ?>
 <?php require 'includes/header.php'; ?>
 
-<h2>New article</h2>
+<h2>Edit article</h2>
 
 <?php require 'includes/article-form.php'; ?>
 
