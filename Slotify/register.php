@@ -1,3 +1,5 @@
+
+
 <?php 
 	include("includes/config.php");
 	include("includes/classes/Account.php");
@@ -21,11 +23,35 @@
 	<title>Welcome to Slotify!</title>
 	
 	<link rel="stylesheet" type="text/css" href="assets/css/register.css">
+    
 
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
 	<script src="assets/js/register.js"></script>
 </head>
 <body>
+	<?php
+	
+	if(isset($_POST['registerButton'])) {
+		echo '
+		<script>
+			$(document).ready(function () {
+				$("#loginForm").hide();
+				$("#registerForm").show();
+			});
+		</script>';
+	}
+	else {
+		echo '
+		<script>
+			$(document).ready(function () {
+				$("#loginForm").show();
+				$("#registerForm").hide();
+			});
+		</script>';
+	}
+
+	?>
+
 	<div id="background">
 
 		<div id="loginContainer">
@@ -36,7 +62,7 @@
 					<p>
 						<?php echo $account->getError(Constants::$loginFailed); ?>
 						<label for="loginUsername">Username</label>
-						<input id="loginUsername" name="loginUsername" type="text" placeholder="Username" required>
+						<input id="loginUsername" name="loginUsername" type="text" placeholder="Username" value="<?php getInputValue('loginUsername') ?>" required>
 					</p>
 					<p>
 						<label for="loginPassword">Password</label>
@@ -89,7 +115,7 @@
 					</p>
 
 					<p>
-						<?php echo $account->getError(Constants::$passwordsDoNotMatch); ?>
+						<?php echo $account->getError(Constants::$passwordsDoNoMatch); ?>
 						<?php echo $account->getError(Constants::$passwordNotAlphanumeric); ?>
 						<?php echo $account->getError(Constants::$passwordCharacters); ?>
 						<label for="password">Password</label>
@@ -111,9 +137,18 @@
 
 
 			</div>
+			
+			<div id="loginText">
+				<h1>Get great music, right now</h1>
+				<h2>Listen to loads of songs for free</h2>
+				<ul>
+					<li></i>Discover music you'll fall in love with</li>
+					<li></i>Create your own playulsts</li>
+					<li></i>Follow artists to keep up to date</li>
+				</ul>
+			</div>
 
 		</div>
-
 	</div>
 </body>
 </html>
