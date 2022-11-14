@@ -77,13 +77,6 @@
 				<form id="registerForm" action="register.php" method="POST">
 					<h2>Create your free account</h2>
 					<p>
-						<?php echo $account->getError(Constants::$usernameCharacters); ?>
-						<?php echo $account->getError(Constants::$usernameTaken); ?>
-						<label for="username">Username</label>
-						<input id="username" name="username" type="text" placeholder="Username" value="<?php getInputValue('username') ?>" required>
-					</p>
-
-					<p>
 						<?php echo $account->getError(Constants::$firstNameCharacters); ?>
 						<label for="firstName">First name</label>
 						<input id="firstName" name="firstName" type="text" placeholder="First Name" value="<?php getInputValue('firstName') ?>" required>
@@ -93,6 +86,13 @@
 						<?php echo $account->getError(Constants::$lastNameCharacters); ?>
 						<label for="lastName">Last name</label>
 						<input id="lastName" name="lastName" type="text" placeholder="Last Name" value="<?php getInputValue('lastName') ?>" required>
+					</p>
+
+					<p>
+						<?php echo $account->getError(Constants::$usernameCharacters); ?>
+						<?php echo $account->getError(Constants::$usernameTaken); ?>
+						<label for="username">Username</label>
+						<input id="username" name="username" type="text" placeholder="Username" value="<?php getInputValue('username') ?>" required>
 					</p>
 
 					<p>

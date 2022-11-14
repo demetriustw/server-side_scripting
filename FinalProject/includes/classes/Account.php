@@ -2,6 +2,7 @@
 	class Account {
 
 		private $con;
+		private $id;
 		private $errorArray;
 
 		public function __construct($con) {
@@ -54,9 +55,25 @@
 			$profilePic = "assets/images/profile-pics/head_emerald.png";
 			$date = date("Y-m-d");
 
-			$result = mysqli_query($this->con, "INSERT INTO users VALUES ('', '$un', '$fn', '$ln', '$em', '$encryptedPw', '$date', '$profilePic')");
+			$this->id = $id;
+
+			$result = mysqli_query($this->con, "INSERT INTO users VALUES ('$id', '$un', '$fn', '$ln', '$em', '$encryptedPw', '$date', '$profilePic')");
 
 			return $result;
+		}
+
+		private function validateFirstName($fn) {
+			if(strlen($fn) > 25 || strlen($fn) < 2) {
+				array_push($this->errorArray, Constants::$firstNameCharacters);
+				return;
+			}
+		}
+
+		private function validateLastName($ln) {
+			if(strlen($ln) > 25 || strlen($ln) < 2) {
+				array_push($this->errorArray, Constants::$lastNameCharacters);
+				return;
+			}
 		}
 
 		private function validateUsername($un) {
@@ -72,20 +89,6 @@
 				return;
 			}
 
-		}
-
-		private function validateFirstName($fn) {
-			if(strlen($fn) > 25 || strlen($fn) < 2) {
-				array_push($this->errorArray, Constants::$firstNameCharacters);
-				return;
-			}
-		}
-
-		private function validateLastName($ln) {
-			if(strlen($ln) > 25 || strlen($ln) < 2) {
-				array_push($this->errorArray, Constants::$lastNameCharacters);
-				return;
-			}
 		}
 
 		private function validateEmails($em, $em2) {
