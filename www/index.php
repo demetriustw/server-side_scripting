@@ -1,44 +1,46 @@
 <?php
 
-require 'classes/Database.php';
-require 'classes/Article.php';
-require 'includes/auth.php';
+require 'includes/init.php';
 
-session_start();
+$conn = require 'includes/db.php';
 
-$db = new Database();
-$conn = $db->getConn();
+$paginator = new Paginator($_GET['page'] ?? 1, 4, Article::getTotal($conn, true));
 
-$articles = Article::getAll($conn);
+$articles = Article::getPage($conn, $paginator->limit, $paginator->offset, true);
 
 ?>
 <?php require 'includes/header.php'; ?>
-
-<?php if (isLoggedIn()) : ?>
-    
-    <p>You are logged in. <a href="logout.php">Log out</a></p>
-    <p><a href="new-article.php">New article</a></p>
-
-<?php else : ?>
-    
-    <p>You are not logged in. <a href="login.php">Log in</a></p>
-
-<?php endif; ?>
 
 <?php if (empty($articles)) : ?>
     <p>No articles found.</p>
 <?php else : ?>
 
-    <ul>
+    <ul id="index">
         <?php foreach ($articles as $article) : ?>
             <li>
                 <article>
-                    <h2><a href="/www/article.php?id=<?= $article['id']; ?>"><?= htmlspecialchars($article['title']); ?></a></h2>
+                    <h2><a href="article.php?id=<?= $article['id']; ?>"><?= htmlspecialchars($article['title']); ?></a></h2>
+
+                    <time datetime="<?= $article['published_at'] ?>"><?php
+                        $datetime = new DateTime($article['published_at']);
+                        echo $datetime->format("j F, Y");
+                    ?></time>
+
+                    <?php if ($article['category_names']) : ?>
+                        <p>Categories:
+                            <?php foreach ($article['category_names'] as $name) : ?>
+                                <?= htmlspecialchars($name); ?>
+                            <?php endforeach; ?>
+                        </p>
+                    <?php endif; ?>
+                    
                     <p><?= htmlspecialchars($article['content']); ?></p>
                 </article>
             </li>
         <?php endforeach; ?>
     </ul>
+
+    <?php require 'includes/pagination.php'; ?>
 
 <?php endif; ?>
 

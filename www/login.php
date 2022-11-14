@@ -1,23 +1,16 @@
 <?php
 
-require 'includes/url.php';
-require 'classes/User.php';
-require 'classes/Database.php';
-
-session_start();
+require 'includes/init.php';
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
-    $db = new Database();
-    $conn = $db->getConn();
+    $conn = require 'includes/db.php';
 
     if (User::authenticate($conn, $_POST['username'], $_POST['password'])) {
         
-        session_regenerate_id(true);
+        Auth::login();
 
-        $_SESSION['is_logged_in'] = true;
-
-        redirect('/www/');
+        Url::redirect('/');
 
     } else {
         
@@ -37,17 +30,17 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
 <form method="post">
 
-    <div>
+    <div class="form-group">
         <label for="username">Username</label>
-        <input name="username" id="username">
+        <input name="username" id="username" class="form-control">
     </div>
 
-    <div>
+    <div class="form-group">
         <label for="password">Password</label>
-        <input type="password" name="password" id="password">
+        <input type="password" name="password" id="password" class="form-control">
     </div>
 
-    <button>Log in</button>
+    <button class="btn">Log in</button>
 
 </form>
 
