@@ -2,9 +2,9 @@
 
 /**
  * Redirect to another URL on the same site
- * 
+ *
  * @param string $path The path to redirect to
- * 
+ *
  * @return void
  */
 function redirect($path)
@@ -15,6 +15,6 @@ function redirect($path)
         $protocol = 'http';
     }
 
-    header("Location: $protocol://" . $_SERVER['HTTP_HOST'] . "/www". $path);
+    header("Location: $protocol://" . $_SERVER['HTTP_HOST'] . $path);
     exit;
 }

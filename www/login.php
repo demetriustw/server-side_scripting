@@ -1,23 +1,29 @@
 <?php
 
 require 'includes/url.php';
+require 'classes/User.php';
+require 'classes/Database.php';
 
 session_start();
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
-  if ($_POST['username'] == 'UnrealVoice' && $_POST['password'] == 'secret') {
+    $db = new Database();
+    $conn = $db->getConn();
 
-    $_SESSION['is_logged_in'] = true;
+    if (User::authenticate($conn, $_POST['username'], $_POST['password'])) {
+        
+        session_regenerate_id(true);
 
-    redirect('/');
+        $_SESSION['is_logged_in'] = true;
 
-  } else {
+        redirect('/www/');
 
-    $error = "login incorrect";
+    } else {
+        
+        $error = "login incorrect";
 
-  }
-
+    }
 }
 
 ?>
@@ -26,22 +32,22 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 <h2>Login</h2>
 
 <?php if (! empty($error)) : ?>
-  <p><?= $error ?></p>
+    <p><?= $error ?></p>
 <?php endif; ?>
 
 <form method="post">
 
-  <div>
-    <label for="username">Username</label>
-    <input name="username" id="username">
-  </div>
+    <div>
+        <label for="username">Username</label>
+        <input name="username" id="username">
+    </div>
 
-  <div>
-    <label for="password">Password</label>
-    <input type="password" name="password" id=password>
-  </div>
+    <div>
+        <label for="password">Password</label>
+        <input type="password" name="password" id="password">
+    </div>
 
-  <button>Log in</button>
+    <button>Log in</button>
 
 </form>
 
